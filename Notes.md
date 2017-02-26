@@ -6,3 +6,8 @@
 
 1. Start `android avd`
 2. Run `react-native run-android` in the project folder
+
+#### Remote JS debugging
+
+Android: cmd + M
+iOS: cmd + D
