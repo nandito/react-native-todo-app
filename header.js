@@ -16,7 +16,7 @@ class Header extends Component {
         </TouchableOpacity>
         <TextInput
           value={this.props.value}
-          onChange={this.props.onChange}
+          onChangeText={this.props.onChange}
           onSubmitEditing={this.props.onAddItem}
           placeholder="What needs to be done?"
           blurOnSubmit={false}
