@@ -18,6 +18,7 @@ class App extends Component {
 
     this.setSource = this.setSource.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
+    this.handleOnRemove = this.handleOnRemove.bind(this)
     this.handleToggleComplete = this.handleToggleComplete.bind(this)
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this)
   }
@@ -28,6 +29,12 @@ class App extends Component {
       dataSource: this.state.dataSource.cloneWithRows(itemsDatasource),
       ...otherState
     })
+  }
+
+  handleOnRemove(key) {
+    const newItems = this.state.items.filter(item => item.key !== key)
+
+    this.setSource(newItems, newItems)
   }
 
   handleToggleComplete(key, complete) {
@@ -84,6 +91,7 @@ class App extends Component {
               return (
                 <Row
                   key={key}
+                  onRemove={() => this.handleOnRemove(key)}
                   onComplete={(complete) => this.handleToggleComplete(key, complete)}
                   {...value}
                 />
