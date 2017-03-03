@@ -26,6 +26,7 @@ class App extends Component {
     }
 
     this.setSource = this.setSource.bind(this)
+    this.handleClearComplete = this.handleClearComplete.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
     this.handleOnRemove = this.handleOnRemove.bind(this)
@@ -39,6 +40,12 @@ class App extends Component {
       dataSource: this.state.dataSource.cloneWithRows(itemsDatasource),
       ...otherState
     })
+  }
+
+  handleClearComplete() {
+    const newItems = filterItems('ACTIVE', this.state.items)
+
+    this.setSource(newItems, filterItems(this.state.filter, newItems))
   }
 
   handleFilter(filter) {
@@ -120,6 +127,7 @@ class App extends Component {
           count={filterItems('ACTIVE', this.state.items).length}
           filter={this.state.filter}
           onFilter={this.handleFilter}
+          onClearComplete={this.handleClearComplete}
         />
       </View>
     )
