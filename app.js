@@ -4,6 +4,14 @@ import Header from './header'
 import Footer from './footer'
 import Row from './row'
 
+const filterItems = (filter, items) => (
+  items.filter(item => {
+    if (filter === 'ALL') return true
+    if (filter === 'COMPLETED') return item.complete
+    if (filter === 'ACTIVE') return !item.complete
+  })
+)
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -11,12 +19,14 @@ class App extends Component {
 
     this.state = {
       allComplete: false,
+      filter: 'ALL',
       value: '',
       items: [],
       dataSource: ds.cloneWithRows([])
     }
 
     this.setSource = this.setSource.bind(this)
+    this.handleFilter = this.handleFilter.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
     this.handleOnRemove = this.handleOnRemove.bind(this)
     this.handleToggleComplete = this.handleToggleComplete.bind(this)
@@ -31,10 +41,14 @@ class App extends Component {
     })
   }
 
+  handleFilter(filter) {
+    this.setSource(this.state.items, filterItems(filter, this.state.items), { filter })
+  }
+
   handleOnRemove(key) {
     const newItems = this.state.items.filter(item => item.key !== key)
 
-    this.setSource(newItems, newItems)
+    this.setSource(newItems, filterItems(this.state.filter, newItems))
   }
 
   handleToggleComplete(key, complete) {
@@ -47,7 +61,7 @@ class App extends Component {
       }
     })
 
-    this.setSource(newItems, newItems)
+    this.setSource(newItems, filterItems(this.state.filter, newItems))
   }
 
   handleToggleAllComplete() {
@@ -56,7 +70,7 @@ class App extends Component {
       ...item,
       complete
     }))
-    this.setSource(newItems, newItems, { allComplete: complete })
+    this.setSource(newItems, filterItems(this.state.filter, newItems), { allComplete: complete })
   }
 
   handleAddItem() {
@@ -69,7 +83,7 @@ class App extends Component {
         complete: false
       }
     ]
-    this.setSource(newItems, newItems, { value: '' })
+    this.setSource(newItems, filterItems(this.state.filter, newItems), { value: '' })
   }
 
   render() {
@@ -102,7 +116,10 @@ class App extends Component {
             }}
           />
         </View>
-        <Footer />
+        <Footer
+          filter={this.state.filter}
+          onFilter={this.handleFilter}
+        />
       </View>
     )
   }
