@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  ActivityIndicator,
   AsyncStorage,
   View,
   Text,
@@ -26,6 +27,7 @@ class App extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 
     this.state = {
+      loading: true,
       allComplete: false,
       filter: 'ALL',
       value: '',
@@ -46,10 +48,12 @@ class App extends Component {
     AsyncStorage.getItem('items').then((json) => {
       try {
         const items = JSON.parse(json)
-        this.setSource(items, items)
+        this.setSource(items, items, { loading: false })
       }
       catch(e) {
-
+        this.setState({
+          loading: false
+        })
       }
     })
   }
@@ -150,6 +154,12 @@ class App extends Component {
           onFilter={this.handleFilter}
           onClearComplete={this.handleClearComplete}
         />
+        {this.state.loading && <View style={styles.loading}>
+          <ActivityIndicator
+            animating
+            size="large"
+          />
+        </View>}
       </View>
     )
   }
@@ -168,6 +178,16 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: '#FFF'
+  },
+  loading: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, .2)'
   },
   separator: {
     borderWidth: 1,
